@@ -20,6 +20,7 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-btr": "^2.2.1",
+    "react-native-extra-dimensions-android": "^1.2.5",
     "react-native-heroicons": "^4.0.0",
     "react-native-modal": "^13.0.1",
     "react-native-paper": "^5.12.3",
@@ -29,7 +30,8 @@
     "react-native-select-dropdown": "^3.4.0",
     "react-native-svg": "^14.1.0",
     "typescript": "^5.3.3",
-    "yarn": "^1.22.21"
+    "yarn": "^1.22.21",
+    "zustand": "^4.5.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

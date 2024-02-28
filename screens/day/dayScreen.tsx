@@ -1,61 +1,55 @@
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import moment from "moment";
-import { Button, Menu, Divider, PaperProvider } from "react-native-paper";
 import "moment/locale/pt-br";
-import { useState } from "react";
 import {
-  Alert,
   FlatList,
-  Modal,
-  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from "react-native";
 import { CheckBox } from "react-native-btr";
-import NewNoteModal from "./newNoteModal";
+import { useStore } from "../../store";
 import EditNoteModal from "./editNoteModal";
+import NewNoteModal from "./newNoteModal";
 
-type Note = {
-  id: number;
-  content: string;
-  createdAt: Date;
-  checked: boolean;
-};
+const Stack = createNativeStackNavigator();
 
-export default function HomeScreen() {
-  const [notes, setNotes] = useState<Note[]>([
-    { id: 1, content: "Hello", createdAt: new Date(), checked: false },
-  ]);
-
-  const handleAddNote = (content: string) => {
-    const note = {
-      id: Date.now(),
-      content,
-      createdAt: new Date(),
-      checked: false,
-    };
-
-    setNotes(notes ? [...notes, note] : [note]);
-  };
-
-  const toggleNoteChecked = (id: number) => {
-    const newNotes = notes?.map((note) => {
-      if (note.id === id) {
-        note.checked = !note.checked;
-      }
-      return note;
-    });
-
-    setNotes(newNotes);
-  };
+export default function DayScreen() {
+  const { addNote, notes, toggleNote, currentDate } = useStore();
+  const dayText = moment(new Date(currentDate))
+    .calendar(null, {
+      lastDay: "[Ontem]",
+      sameDay: "[Hoje]",
+      nextDay: "[Amanhã]",
+      lastWeek: "dddd",
+      nextWeek: "dddd",
+      sameElse: "L",
+    })
+    .toString();
 
   return (
     <View style={styles.container}>
-      <NewNoteModal
-        setNoteChecked={toggleNoteChecked}
-        handleAddNote={handleAddNote}
-      />
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        <Text
+          style={{
+            fontWeight: "600",
+            fontSize: 30,
+            marginTop: 10,
+            marginBottom: 25,
+          }}
+        >
+          {dayText}
+        </Text>
+      </View>
+      <NewNoteModal handleAddNote={addNote} />
       <FlatList
         data={notes}
         renderItem={({ item }) => (
@@ -77,19 +71,19 @@ export default function HomeScreen() {
               style={{
                 display: "flex",
                 flexDirection: "row",
-                height: 20,
                 gap: 7,
               }}
             >
               <TouchableOpacity activeOpacity={0.7}>
                 <CheckBox
+                  borderWidth={1}
                   checked={item.checked}
-                  onPress={() => toggleNoteChecked(item.id)}
+                  onPress={() => toggleNote(item.id)}
                 />
               </TouchableOpacity>
               <Text>{item.content}</Text>
             </View>
-            <EditNoteModal />
+            <EditNoteModal note={item} />
           </View>
         )}
       />
@@ -106,7 +100,6 @@ const styles = StyleSheet.create({
   addNoteText: {
     color: "white",
   },
-
   container: {
     flex: 1,
     backgroundColor: "#fff",

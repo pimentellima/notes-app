@@ -12,10 +12,8 @@ import Modal from "react-native-modal";
 
 export default function NewNoteModal({
   handleAddNote,
-  setNoteChecked,
 }: {
   handleAddNote: (content: string) => void;
-  setNoteChecked: (id: number) => void;
 }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [noteContent, setNoteContent] = useState("");
@@ -23,6 +21,7 @@ export default function NewNoteModal({
   return (
     <View>
       <Modal
+        backdropOpacity={0.1}
         animationIn={"slideInUp"}
         animationOut={"slideOutDown"}
         isVisible={modalVisible}
